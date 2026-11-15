@@ -1,0 +1,18 @@
+# Ingen personlige Node-RED-data eller hemmeligheder i offentligt GitHub
+settings.js
+flows.json
+flows_cred.json
+flows*.json
+flows*_cred.json
+.config*
+node_modules/
+projects/
+context/
+userDir/
+*.backup
+*.bak
+.env
+.env.*
+!*.example
+*.pem
+*.key
