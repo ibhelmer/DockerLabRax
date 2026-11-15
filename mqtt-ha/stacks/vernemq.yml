@@ -1,0 +1,175 @@
+version: "3.8"
+
+services:
+  vmq0:
+    image: vernemq/vernemq:2.2.1
+    hostname: vmq0.mqtt.internal
+    environment:
+      DOCKER_VERNEMQ_ACCEPT_EULA: "yes"
+      DOCKER_VERNEMQ_NODENAME: "vmq0.mqtt.internal"
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: "off"
+      DOCKER_VERNEMQ_USER_IOTUSER: "${MQTT_PASSWORD}"
+      # Kun til lab: kan give inkonsistens under en netsplit
+      DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT: "on"
+    command:
+      - /bin/bash
+      - -ec
+      - |
+        IP=$$(ip -4 -o addr show | awk '$$4 ~ /^10[.]77[.]20[.]/ {sub(/\/.*/, "", $$4); print $$4; exit}')
+        if [ -z "$$IP" ]; then
+          echo "FEJL: Intet interface paa mqtt-core (10.77.20.0/24)" >&2
+          exit 1
+        fi
+        export DOCKER_IP_ADDRESS="$$IP"
+        exec /usr/sbin/start_vernemq
+    volumes:
+      - /srv/vernemq/data:/vernemq/data
+      - /srv/vernemq/etc:/vernemq/etc
+      - /srv/vernemq/log:/vernemq/log
+    networks:
+      mqtt-core:
+        aliases:
+          - vmq0.mqtt.internal
+    healthcheck:
+      test: ["CMD-SHELL", "vernemq ping | grep -q pong"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 90s
+    stop_grace_period: 90s
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.labels.mqtt.broker == vmq0
+      restart_policy:
+        condition: any
+        delay: 10s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  vmq1:
+    image: vernemq/vernemq:2.2.1
+    hostname: vmq1.mqtt.internal
+    environment:
+      DOCKER_VERNEMQ_ACCEPT_EULA: "yes"
+      DOCKER_VERNEMQ_NODENAME: "vmq1.mqtt.internal"
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: "off"
+      DOCKER_VERNEMQ_USER_IOTUSER: "${MQTT_PASSWORD}"
+      DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT: "on"
+    command:
+      - /bin/bash
+      - -ec
+      - |
+        IP=$$(ip -4 -o addr show | awk '$$4 ~ /^10[.]77[.]20[.]/ {sub(/\/.*/, "", $$4); print $$4; exit}')
+        if [ -z "$$IP" ]; then
+          echo "FEJL: Intet interface paa mqtt-core (10.77.20.0/24)" >&2
+          exit 1
+        fi
+        export DOCKER_IP_ADDRESS="$$IP"
+        exec /usr/sbin/start_vernemq
+    volumes:
+      - /srv/vernemq/data:/vernemq/data
+      - /srv/vernemq/etc:/vernemq/etc
+      - /srv/vernemq/log:/vernemq/log
+    networks:
+      mqtt-core:
+        aliases:
+          - vmq1.mqtt.internal
+    healthcheck:
+      test: ["CMD-SHELL", "vernemq ping | grep -q pong"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 90s
+    stop_grace_period: 90s
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.labels.mqtt.broker == vmq1
+      restart_policy:
+        condition: any
+        delay: 10s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+  vmq2:
+    image: vernemq/vernemq:2.2.1
+    hostname: vmq2.mqtt.internal
+    environment:
+      DOCKER_VERNEMQ_ACCEPT_EULA: "yes"
+      DOCKER_VERNEMQ_NODENAME: "vmq2.mqtt.internal"
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: "off"
+      DOCKER_VERNEMQ_USER_IOTUSER: "${MQTT_PASSWORD}"
+      DOCKER_VERNEMQ_ALLOW_REGISTER_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_PUBLISH_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_SUBSCRIBE_DURING_NETSPLIT: "on"
+      DOCKER_VERNEMQ_ALLOW_UNSUBSCRIBE_DURING_NETSPLIT: "on"
+    command:
+      - /bin/bash
+      - -ec
+      - |
+        IP=$$(ip -4 -o addr show | awk '$$4 ~ /^10[.]77[.]20[.]/ {sub(/\/.*/, "", $$4); print $$4; exit}')
+        if [ -z "$$IP" ]; then
+          echo "FEJL: Intet interface paa mqtt-core (10.77.20.0/24)" >&2
+          exit 1
+        fi
+        export DOCKER_IP_ADDRESS="$$IP"
+        exec /usr/sbin/start_vernemq
+    volumes:
+      - /srv/vernemq/data:/vernemq/data
+      - /srv/vernemq/etc:/vernemq/etc
+      - /srv/vernemq/log:/vernemq/log
+    networks:
+      mqtt-core:
+        aliases:
+          - vmq2.mqtt.internal
+    healthcheck:
+      test: ["CMD-SHELL", "vernemq ping | grep -q pong"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 90s
+    stop_grace_period: 90s
+    deploy:
+      replicas: 1
+      endpoint_mode: dnsrr
+      placement:
+        constraints:
+          - node.labels.mqtt.broker == vmq2
+      restart_policy:
+        condition: any
+        delay: 10s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+
+networks:
+  mqtt-core:
+    external: true
