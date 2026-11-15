@@ -1,0 +1,288 @@
+# Syv separate Node-RED-instanser, én pr. Node1...Node7.
+# Kræver 64-bit Raspberry Pi OS (arm64) og /srv/nodered/userN/settings.js
+# oprettet ved hjælp af scripts/prepare-node.sh på den tilsvarende node.
+#
+# Udrul fra en Swarm manager (Node1):
+#   sudo docker stack deploy -c node-red/stack.yml nodered
+#
+# Node-RED editorer: http://192.168.1.101:1901 ... :1907
+# Beskyt med adminAuth i settings.js. Kun adgang fra undervisningsnet.
+version: "3.8"
+
+services:
+  user1:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1901
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user1
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node1
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+  user2:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1902
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user2
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node2
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+  user3:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1903
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user3
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node3
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+  user4:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1904
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user4
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node4
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+  user5:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1905
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user5
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node5
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+  user6:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1906
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user6
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node6
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+  user7:
+    image: nodered/node-red:5.0.9-24
+    environment:
+      TZ: Europe/Copenhagen
+    ports:
+      - target: 1880
+        published: 1907
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - type: bind
+        source: /srv/nodered/user7
+        target: /data
+    networks:
+      - nodered-net
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:1880/auth/login >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 3
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == Node7
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 96M
+
+networks:
+  nodered-net:
+    driver: overlay
