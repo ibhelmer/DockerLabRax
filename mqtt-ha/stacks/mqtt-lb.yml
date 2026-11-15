@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  haproxy:
+    image: haproxy:3.2-alpine
+    configs:
+      - source: mqtt-haproxy-v3
+        target: /usr/local/etc/haproxy/haproxy.cfg
+    networks:
+      - mqtt-core
+    ports:
+      - target: 1884
+        published: 1884
+        protocol: tcp
+        mode: host
+    stop_grace_period: 30s
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constraints:
+          - node.labels.mqtt.proxy == true
+        max_replicas_per_node: 1
+      restart_policy:
+        condition: any
+        delay: 5s
+      update_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 32M
+
+networks:
+  mqtt-core:
+    external: true
+
+configs:
+  mqtt-haproxy-v3:
+    external: true
