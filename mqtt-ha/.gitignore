@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+vmq.passwd
+*.passwd
+*.key
+*.pem
+*.p12
+*.pfx
+*.bak
+*.bak-*
+*.log
+.mqtt-admin/
+__pycache__/
