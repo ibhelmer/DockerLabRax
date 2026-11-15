@@ -52,6 +52,7 @@ MQTT-clients --> 192.168.1.200:1884 (VIP, Keepalived)
 - [HAProxy TCP-konfiguration](config/haproxy.cfg)
 - [Keepalived Node5](config/keepalived-node5.conf) og [Node6](config/keepalived-node6.conf)
 - [Keepalived health check](scripts/check-mqtt-haproxy.sh)
+- [Statuskontrol (read-only)](scripts/check-cluster.sh)
 - [Python MQTT User Manager](scripts/mqtt_user_manager.py) – kræver preflight og lokal validering.
 
 ## Vigtigt inden anvendelse
