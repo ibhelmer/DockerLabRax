@@ -5,7 +5,8 @@
 # Udrul fra en Swarm manager (Node1):
 #   sudo docker stack deploy -c node-red/stack.yml nodered
 #
-# Node-RED editorer: http://192.168.1.101:1901 ... :1907
+# Node-RED editorer: http://192.168.1.101:1880 ... http://192.168.1.107:1880
+# Host publishing: kun den node der kører containeren lytter på 1880.
 # Beskyt med adminAuth i settings.js. Kun adgang fra undervisningsnet.
 version: "3.8"
 
@@ -16,9 +17,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1901
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user1
@@ -55,9 +56,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1902
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user2
@@ -94,9 +95,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1903
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user3
@@ -133,9 +134,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1904
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user4
@@ -172,9 +173,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1905
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user5
@@ -211,9 +212,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1906
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user6
@@ -250,9 +251,9 @@ services:
       TZ: Europe/Copenhagen
     ports:
       - target: 1880
-        published: 1907
+        published: 1880
         protocol: tcp
-        mode: ingress
+        mode: host
     volumes:
       - type: bind
         source: /srv/nodered/user7
