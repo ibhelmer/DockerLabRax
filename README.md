@@ -16,7 +16,7 @@ Denne del af Docker Swarm-laboratoriet dokumenterer MQTT HA på syv Raspberry Pi
 
 ## Node-RED til syv brugere
 
-Projektet indeholder nu syv selvstændige Node-RED-services, én på hver Raspberry Pi, med portene 1901–1907, individuelle bcrypt-login og hver sin persistente /data-mappe.
+Projektet indeholder nu syv selvstændige Node-RED-services, én på hver Raspberry Pi, med port 1880 på hver nodes egen LAN-IP (192.168.1.101–107), individuelle bcrypt-login og hver sin persistente /data-mappe.
 
 - [Node-RED installationsvejledning og brugerfordeling](node-red/README.md)
 - [Docker Swarm stack til alle syv instanser](node-red/stack.yml)
