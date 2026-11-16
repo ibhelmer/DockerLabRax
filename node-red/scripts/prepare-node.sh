@@ -88,6 +88,6 @@ sudo install -m 0600 -o 1000 -g 1000 "$TMP_DIR/settings.js" "$DATA_DIR/settings.
 
 echo "KLAR: $EXPECTED_HOST / user$N"
 echo "Data: $DATA_DIR (ejer 1000:1000)"
-echo "Planlagt URL: http://192.168.1.101:190$N"
+echo "Planlagt URL: http://192.168.1.$((100 + N)):1880"
 echo "Din editoradgangskode er ikke gemt i klartekst."
 echo "Husk backup af settings.js, flows.json og credentials i /data."
