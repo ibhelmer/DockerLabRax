@@ -6,15 +6,15 @@ Separat Node-RED pr. bruger i Docker Swarm på DockerLabRax, Raspberry Pi Node1�
 
 | Bruger | Placering | Port | URL via Node1 | Persistens |
 |---|---|---:|---|---|
-| user1 | Node1 | 1901 | http://192.168.1.101:1901 | /srv/nodered/user1 på Node1 |
-| user2 | Node2 | 1902 | http://192.168.1.101:1902 | /srv/nodered/user2 på Node2 |
-| user3 | Node3 | 1903 | http://192.168.1.101:1903 | /srv/nodered/user3 på Node3 |
-| user4 | Node4 | 1904 | http://192.168.1.101:1904 | /srv/nodered/user4 på Node4 |
-| user5 | Node5 | 1905 | http://192.168.1.101:1905 | /srv/nodered/user5 på Node5 |
-| user6 | Node6 | 1906 | http://192.168.1.101:1906 | /srv/nodered/user6 på Node6 |
-| user7 | Node7 | 1907 | http://192.168.1.101:1907 | /srv/nodered/user7 på Node7 |
+| user1 | Node1 | 1880 | http://192.168.1.101:1880 | /srv/nodered/user1 på Node1 |
+| user2 | Node2 | 1880 | http://192.168.1.102:1880 | /srv/nodered/user2 på Node2 |
+| user3 | Node3 | 1880 | http://192.168.1.103:1880 | /srv/nodered/user3 på Node3 |
+| user4 | Node4 | 1880 | http://192.168.1.104:1880 | /srv/nodered/user4 på Node4 |
+| user5 | Node5 | 1880 | http://192.168.1.105:1880 | /srv/nodered/user5 på Node5 |
+| user6 | Node6 | 1880 | http://192.168.1.106:1880 | /srv/nodered/user6 på Node6 |
+| user7 | Node7 | 1880 | http://192.168.1.107:1880 | /srv/nodered/user7 på Node7 |
 
-Alle containere bruger internt TCP/1880. Swarm routing mesh publicerer portene 1901–1907 på ALLE Swarm-noder, ikke kun Node1. MQTT VIP 192.168.1.200:1884 berøres ikke.
+Alle containere bruger TCP/1880. Swarm publicerer hver service med `mode: host`, så porten 1880 kun er åben på den node, hvor den pågældende Node-RED-instans kører. Hver node har sin egen LAN-IP, og ingen routing mesh bruges for Node-RED. MQTT VIP 192.168.1.200:1884 berøres ikke.
 
 **Vigtigt:** Bind mounts + faste placement constraints betyder, at hver brugers data opbevares på én bestemt node. Der er IKKE Node-RED-HA. Hvis Node4 er nede, er user4 offline, indtil Node4 eller data gendannes.
 
@@ -28,7 +28,7 @@ uname -m
 free -h
 ~~~
 
-Hostnames skal hedde Node1 til Node7. Image version 5 kræver 64-bit arm64/aarch64; 32-bit Raspberry Pi OS kan ikke anvende dette image. Vurder ledig RAM, CPU og disk, især på MQTT-brokerne og HAProxy-noderne. Stacken har 512 MB RAM-grænse pr. bruger og én replica pr. service.
+Hostnames skal hedde Node1 til Node7. Image version 5 kræver 64-bit arm64/aarch64; 32-bit Raspberry Pi OS kan ikke anvende dette image. Vurder ledig RAM, CPU og disk, især på MQTT-brokerne og HAProxy-noderne. Stacken har 512 MB RAM-grænse pr. bruger og én replica pr. service. Kontroller desuden at TCP/1880 ikke allerede anvendes på en af de syv noder (`sudo ss -ltnp | grep ':1880 '`).
 
 ## 2. Opret login og persistente filer
 
@@ -80,8 +80,8 @@ Hvis en service er Pending: kontroller NodeN hostname, arkitektur og placering. 
 ## 4. Test login
 
 ~~~bash
-curl -fsS http://192.168.1.101:1901/auth/login
-curl -fsS http://192.168.1.101:1907/auth/login
+curl -fsS http://192.168.1.101:1880/auth/login
+curl -fsS http://192.168.1.107:1880/auth/login
 bash node-red/scripts/check-instances.sh
 ~~~
 
@@ -114,7 +114,7 @@ Se ../mqtt-ha/docs/user-management.md. Den tidligere Python-brugermanager er end
 - Skift ikke credentialSecret ved genstart eller opgradering: det kan gøre eksisterende credentials ulæselige.
 - De syv Node-RED-instanser er isoleret på containerniveau, men er ikke en stærk sikkerhedsgrænse som syv separate VM'er.
 - Udsæt ikke denne HTTP-installation på internettet; anvend HTTPS/reverse proxy og adgangsbegrænsning før eksterne klienter. Passwords til både editor og Basic Auth sendes ellers uden TLS.
-- Docker Swarm routing mesh kan acceptere 1901–1907 på alle noder; begræns firewall til undervisningsnettet.
+- Swarm host publishing gør TCP/1880 tilgængelig på den konkrete nodes IP. Begræns firewall til undervisningsnettet; HTTP er ikke krypteret.
 - Del ikke Docker socket eller vilkårlige host-mapper med studentercontainere. Node-RED-flows kan anvende noder med betydelige runtime-rettigheder.
 - Placeringsreglerne er faste for at beskytte lokal persistens. Skal en instans flyttes til en anden Pi, kræver det kontrolleret datamigrering eller shared storage.
 
