@@ -4,7 +4,7 @@ Separat Node-RED pr. bruger i Docker Swarm på DockerLabRax, Raspberry Pi Node1�
 
 ## Fordeling
 
-| Bruger | Placering | Port | URL via Node1 | Persistens |
+| Bruger | Placering | Port | URL på brugerens node | Persistens |
 |---|---|---:|---|---|
 | user1 | Node1 | 1880 | http://192.168.1.101:1880 | /srv/nodered/user1 på Node1 |
 | user2 | Node2 | 1880 | http://192.168.1.102:1880 | /srv/nodered/user2 på Node2 |
